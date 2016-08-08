@@ -1,0 +1,98 @@
+﻿<div>
+    <h2>Employees</h2>
+    <hr />
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <a class="btn btn-primary btn-sm" ui-sref="employeeEdit()">Create</a>
+                </th>
+                <th colspan="3" style="white-space:nowrap;">
+                    <form class="form-inline" ng-submit="vm.search()" role="form">
+                        <div class="form-group">
+                            <input type="text" class="form-control input-sm" ng-model="vm.pagingParams.search" placeholder="Search...">
+                            <button type="submit" class="btn btn-info btn-sm"><strong>Search</strong></button>
+                            <button ng-click="vm.searchClear()" class="btn btn-danger btn-sm"><strong>Clear</strong></button>
+                        </div>
+                    </form>
+                </th>
+                <th>
+                    <label for="pageSize">Page size: </label><br>
+                    <select name="pageSize"
+                            ng-model="vm.pagingParams.pageSize"
+                            ng-change="vm.pageSizeChanged()"
+                            ng-options="option for option in vm.pageSizeOptions"></select>
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    <a class="cursor" ng-click="vm.sort('id')">
+                        Id
+                        <span ng-show="vm.pagingParams.sortBy == 'id' && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'id' && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a class="cursor" ng-click="vm.sort('firstName')">
+                        First Name
+                        <span ng-show="vm.pagingParams.sortBy == 'firstName' && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'firstName' && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a class="cursor" ng-click="vm.sort('lastName')">
+                        Last Name
+                        <span ng-show="vm.pagingParams.sortBy == 'lastName' && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'lastName' && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a class="cursor" ng-click="vm.sort('email')">
+                        Email
+                        <span ng-show="vm.pagingParams.sortBy == 'email' && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'email' && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a class="cursor" ng-click="vm.sort('position.name')">
+                        Position
+                        <span ng-show="vm.pagingParams.sortBy == 'position.name' && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'position.name' && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="emp in vm.employees">
+                <td>{{emp.id}}</td>
+                <td>{{emp.firstName}}</td>
+                <td>{{emp.lastName}}</td>
+                <td>{{emp.email}}</td>
+                <td>{{emp.position.name}}</td>
+                <td style="white-space:nowrap;">
+                    <a class="btn btn-primary btn-sm" ui-sref="employeeEdit({id:emp.id})">Edit</a>
+                    <a class="btn btn-danger btn-sm" ng-click="vm.employeeDelete(emp)">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="text-center">
+        <!-- ng-if prevents resetting currentPage to 1 after returning to the page -->
+        <uib-pagination ng-if="vm.totalItems"
+                        boundary-links="true"
+                        direction-links="true"
+                        rotate="false"
+                        total-items="vm.totalItems"
+                        ng-model="vm.pagingParams.currentPage"
+                        ng-click="vm.pageChanged()"
+                        items-per-page="vm.pagingParams.pageSize"
+                        max-size="5"
+                        first-text="<<"
+                        previous-text="<"
+                        next-text=">"
+                        last-text=">>">
+        </uib-pagination>
+    </div>
+    <hr />
+</div>
