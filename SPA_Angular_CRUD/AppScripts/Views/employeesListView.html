@@ -5,7 +5,7 @@
         <thead>
             <tr>
                 <th colspan="2">
-                    <a class="btn btn-primary btn-sm" ui-sref="employeeEdit()">Create</a>
+                    <a class="btn btn-primary btn-sm" ui-sref="home.addEmployee">Create</a>
                 </th>
                 <th colspan="3" style="white-space:nowrap;">
                     <form class="form-inline" ng-submit="vm.search()" role="form">
@@ -28,52 +28,53 @@
                 <th>
                     <a class="cursor" ng-click="vm.sort('id')">
                         Id
-                        <span ng-show="vm.pagingParams.sortBy == 'id' && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
-                        <span ng-show="vm.pagingParams.sortBy == 'id' && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'id'
+                              && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'id'
+                              && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
                 <th>
                     <a class="cursor" ng-click="vm.sort('firstName')">
                         First Name
-                        <span ng-show="vm.pagingParams.sortBy == 'firstName' && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
-                        <span ng-show="vm.pagingParams.sortBy == 'firstName' && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'firstName'
+                              && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'firstName'
+                              && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
                 <th>
                     <a class="cursor" ng-click="vm.sort('lastName')">
                         Last Name
-                        <span ng-show="vm.pagingParams.sortBy == 'lastName' && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
-                        <span ng-show="vm.pagingParams.sortBy == 'lastName' && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'lastName'
+                              && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'lastName'
+                              && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
                 <th>
                     <a class="cursor" ng-click="vm.sort('email')">
                         Email
-                        <span ng-show="vm.pagingParams.sortBy == 'email' && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
-                        <span ng-show="vm.pagingParams.sortBy == 'email' && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'email'
+                              && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'email'
+                              && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
                 <th>
                     <a class="cursor" ng-click="vm.sort('position.name')">
                         Position
-                        <span ng-show="vm.pagingParams.sortBy == 'position.name' && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
-                        <span ng-show="vm.pagingParams.sortBy == 'position.name' && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'position.name'
+                              && !vm.pagingParams.reverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.pagingParams.sortBy == 'position.name'
+                              && vm.pagingParams.reverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="emp in vm.employees">
-                <td>{{emp.id}}</td>
-                <td>{{emp.firstName}}</td>
-                <td>{{emp.lastName}}</td>
-                <td>{{emp.email}}</td>
-                <td>{{emp.position.name}}</td>
-                <td style="white-space:nowrap;">
-                    <a class="btn btn-primary btn-sm" ui-sref="employeeEdit({id:emp.id})">Edit</a>
-                    <a class="btn btn-danger btn-sm" ng-click="vm.employeeDelete(emp)">Delete</a>
-                </td>
+            <tr ng-repeat="emp in vm.employees" ng-include="vm.getTemplate(emp)">
             </tr>
         </tbody>
     </table>
@@ -94,5 +95,85 @@
                         last-text=">>">
         </uib-pagination>
     </div>
+    <div>
+        {{vm.message}}
+    </div>
     <hr />
 </div>
+<script type="text/ng-template" id="display">
+        <td>{{emp.id}}</td>
+        <td>{{emp.firstName}}</td>
+        <td>{{emp.lastName}}</td>
+        <td>{{emp.email}}</td>
+        <td>{{emp.position.name}}</td>
+        <td style="white-space:nowrap;">
+            <button type="button" class="btn btn-primary btn-sm" ng-click="vm.editEmployee(emp)">Edit</button>
+            <button type="button" class="btn btn-danger btn-sm" ng-click="vm.deleteEmployee(emp)">Delete</button>
+        </td>
+</script>
+<script type="text/ng-template" id="edit">
+    <td>{{emp.id}}</td>
+    <td ng-form name="firstNameForm" ng-class="{'has-error': !firstNameForm.firstName.$valid }">
+        <input class="form-control"
+               id="firstName"
+               name="firstName"
+               type="text"
+               placeholder="First Name"
+               ng-model="emp.firstName"
+               ng-required="true" />
+        <div ng-messages="firstNameForm.firstName.$error"
+             class="help-block has-error" role="alert">
+            <span ng-message="required">Required!</span>
+        </div>
+    </td>
+    <td ng-form name="lastNameForm" ng-class="{'has-error': !lastNameForm.lastName.$valid }">
+        <input class="form-control"
+               id="lastName"
+               name="lastName"
+               type="text"
+               placeholder="Last Name"
+               ng-model="emp.lastName"
+               ng-required="true" />
+        <div ng-messages="lastNameForm.lastName.$error"
+             class="help-block has-error" role="alert">
+            <span ng-message="required">Required!</span>
+        </div>
+    </td>
+    <td ng-form name="emailForm" ng-class="{'has-error': !emailForm.email.$valid }">
+        <input class="form-control"
+               id="email"
+               name="email"
+               type="email"
+               placeholder="email"
+               ng-model="emp.email" />
+        <div ng-messages="emailForm.email.$error"
+             class="help-block has-error" role="alert">
+            <span ng-message="email">Invalid format!</span>
+        </div>
+    </td>
+    <td ng-form name="positionForm" ng-class="{'has-error': !positionForm.position.$valid }">
+        <select class="form-control"
+                id="position"
+                name="position"
+                type="text"
+                placeholder="Positions"
+                ng-options="option.name for option in vm.positions track by option.id"
+                ng-change="emp.positionId = emp.position.id"
+                ng-model="emp.position"
+                ng-required="true"></select>
+        <div ng-messages="positionForm.position.$error"
+             class="help-block has-error" role="alert">
+            <span ng-message="required">Required!</span>
+        </div>
+    </td>
+    <td style="white-space:nowrap;">
+        <button type="button" class="btn btn-primary btn-sm"
+                ng-click="vm.updateEmployee(emp)">
+            Save
+        </button>
+        <button type="button" class="btn btn-default btn-sm"
+                ng-click="vm.cancel()">
+            Cancel
+        </button>
+    </td>
+</script>

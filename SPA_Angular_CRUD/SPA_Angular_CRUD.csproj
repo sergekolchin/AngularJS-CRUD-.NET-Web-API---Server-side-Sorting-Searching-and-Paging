@@ -176,7 +176,7 @@
   <ItemGroup>
     <Content Include="AppScripts\controller.js" />
     <Content Include="AppScripts\app.js" />
-    <Content Include="AppScripts\Views\employeeEditView.html" />
+    <Content Include="AppScripts\Views\employeeAddModal.html" />
     <Content Include="AppScripts\Views\employeesListView.html" />
     <Content Include="AppScripts\service.js" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -1015,6 +1015,7 @@
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Views\displayTmpl.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

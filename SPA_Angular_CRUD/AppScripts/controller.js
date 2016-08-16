@@ -2,67 +2,118 @@
 
 var app = angular.module('myApp.controllers', []);
 
-app.controller('employeeListCtrl', ['pagingParams', 'employeesResource', 'employeesGetParams', function (pagingParams, employeesResource, employeesGetParams) {
-    var vm = this;
-    // ref to "global" pagingParams in service
-    vm.pagingParams = pagingParams;
-    vm.pageSizeOptions = [5,10,20,50];
+app.controller('employeeListCtrl', ['pagingParams', 'employeesResource', 'positionsResource', 'employeesGetParams',
+    function (pagingParams, employeesResource, positionsResource, employeesGetParams) {
+        var vm = this;
+        vm.message = '';
+        // ref to "global" pagingParams in service
+        vm.pagingParams = pagingParams;
+        vm.pageSizeOptions = [5, 10, 20, 50];
+        //selected employee
+        vm.selected = {};
 
-    vm.pageSizeChanged = function () {
-        vm.pagingParams.currentPage = 1;
-        loadPage();
-    };
+        // get Positions for dropdown list
+        positionsResource.query(function (data) {
+            vm.positions = data;
+        });
 
-    vm.search = function () {
-        vm.pagingParams.currentPage = 1;
-        loadPage();
-    };
-
-    vm.searchClear = function () {
-        vm.pagingParams.currentPage = 1;
-        vm.pagingParams.search = '';
-        loadPage();
-    };
-
-    vm.sort = function (sortBy) {
-        if (sortBy == vm.pagingParams.sortBy) {
-            vm.pagingParams.reverse = !vm.pagingParams.reverse;
-        } else {
-            vm.pagingParams.sortBy = sortBy;
-            vm.pagingParams.reverse = false;
+        vm.getTemplate = function (emp) {
+            if (emp.id === vm.selected.id) return 'edit';
+            else return 'display';
         }
-        vm.pagingParams.currentPage = 1;
+
+        vm.editEmployee = function (emp) {
+            vm.selected = angular.copy(emp);
+        }
+
+        vm.pageSizeChanged = function () {
+            vm.pagingParams.currentPage = 1;
+            loadPage();
+        };
+
+        vm.search = function () {
+            vm.pagingParams.currentPage = 1;
+            loadPage();
+        };
+
+        vm.searchClear = function () {
+            vm.pagingParams.currentPage = 1;
+            vm.pagingParams.search = '';
+            loadPage();
+        };
+
+        vm.sort = function (sortBy) {
+            if (sortBy == vm.pagingParams.sortBy) {
+                vm.pagingParams.reverse = !vm.pagingParams.reverse;
+            } else {
+                vm.pagingParams.sortBy = sortBy;
+                vm.pagingParams.reverse = false;
+            }
+            vm.pagingParams.currentPage = 1;
+            loadPage();
+        };
+
+        vm.pageChanged = function () {
+            loadPage();
+        };
+
+        function loadPage() {
+            vm.employees = null;
+
+            employeesGetParams.GetEmployees(pagingParams)
+            .success(function (result) {
+                vm.totalItems = result.totalItems;
+                vm.employees = result.data;
+            });
+        }
+
+        vm.updateEmployee = function (employee) {
+            employeesResource.update({ id: employee.id }, employee,
+                            function (data) { //success
+                                vm.selected = angular.copy(data);
+                                vm.message = 'Save Complete';
+                                vm.selected = {};
+                            },
+                            function (response) { //failure
+                                vm.message = 'Error: ';
+                                vm.message = response.statusText + '\r\n';
+                                if (response.data.modelState) {
+                                    for (var key in response.data.modelState) {
+                                        if (response.data.modelState.hasOwnProperty(key)) {
+                                            vm.message += response.data.modelState[key] + "\r\n";
+                                        }
+                                    }
+                                }
+                                if (response.data.exceptionMessage)
+                                    vm.message += response.data.exceptionMessage;
+                            });
+        };
+
+        vm.cancel = function () {
+            //find employee by unchangeable id
+            var index = vm.employees.map(function (e) { return e.id; }).indexOf(vm.selected.id);
+            if (index !== -1) {
+                vm.employees[index] = vm.selected;
+            }
+            vm.selected = {};
+            vm.message = '';
+        }
+
+        vm.deleteEmployee = function (employee) {
+            employeesResource.delete({ id: employee.id }, function (success) {
+                //remove deleted record from array
+                var index = vm.employees.indexOf(employee);
+                if (index !== -1) {
+                    vm.employees.splice(index, 1)
+                }
+            });
+        };
+
         loadPage();
-    };
+    }]);
 
-    vm.pageChanged = function () {
-        loadPage();
-    };
-
-    function loadPage() {
-        vm.employees = null;
-
-        employeesGetParams.GetEmployees(pagingParams)
-        .success(function (result) {
-            vm.totalItems = result.totalItems;
-            vm.employees = result.data;
-        });
-    }
-
-    vm.employeeDelete = function (employee) {
-        var emp = employeesResource.get({ id: employee.id });
-        emp.$delete({id: employee.id}, function (success) {
-            //remove deleted record from array
-            var index = vm.employees.indexOf(employee);
-            vm.employees.splice(index, 1)
-        });
-    }
-
-    loadPage();
-}]);
-
-app.controller('employeeEditCtrl', ['employee', 'positionsResource', '$state',
-    function (employee, positionsResource, $state) {
+app.controller('employeeAddCtrl', ['employee', 'positionsResource', '$state', '$uibModalInstance',
+    function (employee, positionsResource, $state, $uibModalInstance) {
         var vm = this;
         vm.employee = employee;
 
@@ -76,62 +127,30 @@ app.controller('employeeEditCtrl', ['employee', 'positionsResource', '$state',
 
         vm.submit = function () {
             vm.message = '';
-            if (!vm.empForm.$pristine) {
-                if (vm.employee.id && vm.employee.id != 0) { //PUT
-                    vm.employee.$update(
-                        //success
-                        function (data) {
-                            vm.originalEmp = angular.copy(data);
-                            vm.message = 'Save Complete';
-                            $state.transitionTo('home');
-                        },
-                        //failure
-                        function (response) {
-                            vm.message = 'Error: ';
-                            vm.message = response.statusText + '\r\n';
-                            if (response.data.modelState) {
-                                for (var key in response.data.modelState) {
-                                    if (response.data.modelState.hasOwnProperty(key)) {
-                                        vm.message += response.data.modelState[key] + "\r\n";
-                                    }
-                                }
+            vm.employee.$save(
+                //success
+                function (data) {
+                    vm.originalEmp = angular.copy(data);
+                    vm.message = 'Save Complete';
+                    $uibModalInstance.close();
+                },
+                //failure
+                function (response) {
+                    vm.message = 'Error: ';
+                    vm.message = response.statusText + '\r\n';
+                    if (response.data.modelState) {
+                        for (var key in response.data.modelState) {
+                            if (response.data.modelState.hasOwnProperty(key)) {
+                                vm.message += response.data.modelState[key] + "\r\n";
                             }
-                            if (response.data.exceptionMessage)
-                                vm.message += response.data.exceptionMessage;
-                        });
-                } else { //POST
-                    vm.employee.$save(
-                        //success
-                        function (data) {
-                            vm.originalEmp = angular.copy(data);
-                            vm.message = 'Save Complete';
-                            $state.transitionTo('home');
-                        },
-                        //failure
-                        function (response) {
-                            vm.message = 'Error: ';
-                            vm.message = response.statusText + '\r\n';
-                            if (response.data.modelState) {
-                                for (var key in response.data.modelState) {
-                                    if (response.data.modelState.hasOwnProperty(key)) {
-                                        vm.message += response.data.modelState[key] + "\r\n";
-                                    }
-                                }
-                            }
-                            if (response.data.exceptionMessage)
-                                vm.message += response.data.exceptionMessage;
-                        });
-                }
-            } else {
-                vm.message = "No Changes";
-                $state.transitionTo('home');
-            }
+                        }
+                    }
+                    if (response.data.exceptionMessage)
+                        vm.message += response.data.exceptionMessage;
+                });
         };
 
         vm.cancel = function () {
-            vm.empForm.$setPristine();
-            vm.employee = angular.copy(vm.originalEmp);
-            vm.message = '';
-            $state.transitionTo('home');
+            $uibModalInstance.dismiss('cancel');
         }
     }]);

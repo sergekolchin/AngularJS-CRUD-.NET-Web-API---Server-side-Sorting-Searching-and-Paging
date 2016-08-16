@@ -1,0 +1,11 @@
+﻿<script type="text/ng-template" id="display">
+    <td>{{emp.id}}</td>
+    <td>{{emp.firstName}}</td>
+    <td>{{emp.lastName}}</td>
+    <td>{{emp.email}}</td>
+    <td>{{emp.position.name}}</td>
+    <td style="white-space:nowrap;">
+        <button type="button" class="btn btn-primary btn-sm" ng-click="vm.editEmployee(emp)">Edit</button>
+        <button type="button" class="btn btn-danger btn-sm" ng-click="vm.deleteEmployee(emp)">Delete</button>
+    </td>
+</script>

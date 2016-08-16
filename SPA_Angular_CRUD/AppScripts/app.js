@@ -11,23 +11,23 @@
                 templateUrl: 'AppScripts/Views/employeesListView.html',
                 controller: 'employeeListCtrl as vm'
             })
-            .state('employeeEdit', {
-                url: '/employee/edit/:id',
-                templateUrl: 'AppScripts/Views/employeeEditView.html',
-                controller: 'employeeEditCtrl as vm',
-                resolve: {
-                    employeesResource: 'employeesResource',
-                    employee: function (employeesResource, $stateParams) {
-                        var id = $stateParams.id;
-                        //find record
-                        if (id && id != 0) {
-                            return employeesResource.get({ id: id }).$promise;
-                        }
-                        //create record
-                        return new employeesResource();
-                    }
-                }
-            });
+            .state('home.addEmployee', {
+                url: '/add',
+                onEnter: ["$state", "$uibModal", "employeesResource", function ($state, $uibModal, employeesResource) {
+                    $uibModal.open({
+                        animation: true,
+                        size: "sm", 
+                        templateUrl: "AppScripts/Views/employeeAddModal.html",
+                        resolve: {
+                            employee: function (employeesResource) { 
+                                return new employeesResource(); }
+                        },
+                        controller: "employeeAddCtrl as vm"
+                    }).result.finally(function () {
+                        $state.go('home');
+                    });
+                }]
+        });
             $routeProvider.otherwise('')
         }]);
 

@@ -20,16 +20,16 @@
             return service;
         }])
     .factory('employeesResource', ['$resource', function ($resource) {
-        return $resource('api/employees/:id', { id: '@id' }, {
-            update: {
-                method: 'PUT', params: { id: '@id' }
+        return $resource('api/employees/:id', {}, {
+            'update': {
+                method: 'PUT'
             }
         });
     }])
     .factory('positionsResource', ['$resource', function ($resource) {
-        return $resource('api/positions/:id', { id: '@id' }, {
-            update: {
-                method: 'PUT', params: { id: '@id' }
+        return $resource('api/positions/:id', {}, {
+            'update': {
+                method: 'PUT'
             }
         });
     }]);
