@@ -13,7 +13,7 @@ namespace SPA_Angular_CRUD.Data
     {
         protected override void Seed(AppDbContext context)
         {
-            //loading random positions
+            //loading positions
             if (!context.Positions.Any())
             {
                 var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\Positions.json");
@@ -25,7 +25,7 @@ namespace SPA_Angular_CRUD.Data
                 }
             }
 
-            //loading random employees
+            //loading employees
             if (!context.Employees.Any())
             {
                 var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\Employees.json");

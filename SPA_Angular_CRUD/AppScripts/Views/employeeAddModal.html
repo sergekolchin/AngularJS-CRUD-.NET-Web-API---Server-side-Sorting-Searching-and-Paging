@@ -2,16 +2,15 @@
         <h3>Add employee</h3>
     </div>
     <div class="modal-body">
-        <form class="form-vertical"
-              role="form"
+        <form role="form"
               name="vm.empForm"
               novalidate>
             <fieldset>
                 <div class="form-group"
                      ng-class="{'has-error':!vm.empForm.firstName.$valid }">
-                    <label class="col-md-2 control-label"
+                    <label class="control-label"
                            for="firstName">First Name</label>
-                    <div class="col-md-4">
+                    <div>
                         <input class="form-control"
                                id="firstName"
                                name="firstName"
@@ -21,8 +20,7 @@
                                ng-required="true" />
                     </div>
                     <div ng-messages="vm.empForm.firstName.$error"
-                         class="help-block has-error" role="alert"
-                         style="padding-left:20px;">
+                         class="help-block has-error" role="alert">
                         <div ng-message="required">
                             First Name is required.
                         </div>
@@ -30,9 +28,9 @@
                 </div>
                 <div class="form-group"
                      ng-class="{'has-error':!vm.empForm.lastName.$valid }">
-                    <label class="col-md-2 control-label"
+                    <label class="control-label"
                            for="lastName">Last Name</label>
-                    <div class="col-md-4">
+                    <div>
                         <input class="form-control"
                                id="lastName"
                                name="lastName"
@@ -51,9 +49,9 @@
                 </div>
                 <div class="form-group"
                      ng-class="{'has-error':vm.empForm.email.$invalid }">
-                    <label class="col-md-2 control-label"
+                    <label class="control-label"
                            for="email">Email</label>
-                    <div class="col-md-4">
+                    <div>
                         <input class="form-control"
                                id="email"
                                name="email"
@@ -68,9 +66,9 @@
                 </div>
                 <div class="form-group"
                      ng-class="{'has-error':vm.empForm.position.$invalid }">
-                    <label class="col-md-2 control-label"
+                    <label class="control-label"
                            for="position">Position</label>
-                    <div class="col-md-4">
+                    <div>
                         <select class="form-control"
                                 id="position"
                                 name="position"

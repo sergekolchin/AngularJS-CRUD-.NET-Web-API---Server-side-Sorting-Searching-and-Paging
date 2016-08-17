@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using SPA_Angular_CRUD.Data;
 using System.Web.Http;
-using Newtonsoft.Json.Serialization;
+using SPA_Angular_CRUD.Data;
+using System.Data.Entity;
 
 namespace SPA_Angular_CRUD
 {
@@ -25,8 +20,7 @@ namespace SPA_Angular_CRUD
             //Initialize DB
             using (var ctx = new AppDbContext())
             {
-                Database.SetInitializer(new AppDbContextInitializer());
-                ctx.Database.Initialize(true);
+                new AppDbContextInitializer().InitializeDatabase(ctx);
             }
         }
     }
