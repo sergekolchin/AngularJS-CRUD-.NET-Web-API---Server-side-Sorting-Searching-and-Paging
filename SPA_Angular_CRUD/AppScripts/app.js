@@ -19,12 +19,15 @@
                         size: "sm", 
                         templateUrl: "AppScripts/Views/employeeAddModal.html",
                         resolve: {
-                            employee: function (employeesResource) { 
+                            employee: function (employeesResource) {
+                                //create new entity
                                 return new employeesResource(); }
                         },
                         controller: "employeeAddCtrl as vm"
                     }).result.finally(function () {
-                        $state.go('home');
+                        $state.go('home', {}, {
+                            reload: true
+                        });
                     });
                 }]
         });

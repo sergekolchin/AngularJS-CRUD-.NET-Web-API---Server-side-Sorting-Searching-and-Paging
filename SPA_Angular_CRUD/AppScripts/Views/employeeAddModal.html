@@ -1,119 +1,119 @@
-﻿    <div class="modal-header">
-        <h3>Add employee</h3>
-    </div>
-    <div class="modal-body">
-        <form role="form"
-              name="vm.empForm"
-              novalidate>
-            <fieldset>
-                <div class="form-group"
-                     ng-class="{'has-error':!vm.empForm.firstName.$valid }">
-                    <label class="control-label"
-                           for="firstName">First Name</label>
-                    <div>
-                        <input class="form-control"
-                               id="firstName"
-                               name="firstName"
-                               type="text"
-                               placeholder="First Name"
-                               ng-model="vm.employee.firstName"
-                               ng-required="true" />
+﻿<div class="modal-header">
+    <h3>Add employee</h3>
+</div>
+<div class="modal-body">
+    <form role="form"
+          name="vm.empForm"
+          novalidate>
+        <fieldset>
+            <div class="form-group"
+                 ng-class="{'has-error':!vm.empForm.firstName.$valid }">
+                <label class="control-label"
+                       for="firstName">First Name</label>
+                <div>
+                    <input class="form-control"
+                           id="firstName"
+                           name="firstName"
+                           type="text"
+                           placeholder="First Name"
+                           ng-model="vm.employee.firstName"
+                           ng-required="true" />
+                </div>
+                <div ng-messages="vm.empForm.firstName.$error"
+                     class="help-block has-error" role="alert">
+                    <div ng-message="required">
+                        First Name is required.
                     </div>
-                    <div ng-messages="vm.empForm.firstName.$error"
+                </div>
+            </div>
+            <div class="form-group"
+                 ng-class="{'has-error':!vm.empForm.lastName.$valid }">
+                <label class="control-label"
+                       for="lastName">Last Name</label>
+                <div>
+                    <input class="form-control"
+                           id="lastName"
+                           name="lastName"
+                           type="text"
+                           placeholder="Last Name"
+                           ng-model="vm.employee.lastName"
+                           ng-required="true" />
+                </div>
+                <div ng-messages="vm.empForm.lastName.$error"
+                     class="help-block has-error" role="alert"
+                     style="padding-left:20px;">
+                    <div ng-message="required">
+                        Last Name is required.
+                    </div>
+                </div>
+            </div>
+            <div class="form-group"
+                 ng-class="{'has-error':vm.empForm.email.$invalid }">
+                <label class="control-label"
+                       for="email">Email</label>
+                <div>
+                    <input class="form-control"
+                           id="email"
+                           name="email"
+                           type="email"
+                           placeholder="Email"
+                           ng-model="vm.employee.email" />
+                    <div ng-messages="vm.empForm.email.$error"
                          class="help-block has-error" role="alert">
-                        <div ng-message="required">
-                            First Name is required.
-                        </div>
+                        <span ng-message="email">Invalid format!</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group"
+                 ng-class="{'has-error':vm.empForm.position.$invalid }">
+                <label class="control-label"
+                       for="position">Position</label>
+                <div>
+                    <select class="form-control"
+                            id="position"
+                            name="position"
+                            type="text"
+                            placeholder="Positions"
+                            ng-options="option.name for option in vm.positions track by option.id"
+                            ng-change="vm.employee.positionId = vm.employee.position.id"
+                            ng-model="vm.employee.position"
+                            ng-required="true"></select>
+                </div>
+                <div ng-messages="vm.empForm.position.$error"
+                     class="help-block has-error" role="alert"
+                     style="padding-left:20px;">
+                    <div ng-message="required">
+                        Position is required.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <div class="text-center">
+                        <span>
+                            <button class="btn btn-primary"
+                                    style="width: 80px; margin-right: 10px"
+                                    ng-click="vm.submit()"
+                                    ng-disabled="vm.empForm.$invalid">
+                                Save
+                            </button>
+                        </span>
+                        <span>
+                            <button class="btn btn-default"
+                                    style="width: 70px"
+                                    ng-click="vm.cancel()">
+                                Cancel
+                            </button>
+                        </span>
                     </div>
                 </div>
                 <div class="form-group"
-                     ng-class="{'has-error':!vm.empForm.lastName.$valid }">
-                    <label class="control-label"
-                           for="lastName">Last Name</label>
-                    <div>
-                        <input class="form-control"
-                               id="lastName"
-                               name="lastName"
-                               type="text"
-                               placeholder="Last Name"
-                               ng-model="vm.employee.lastName"
-                               ng-required="true" />
-                    </div>
-                    <div ng-messages="vm.empForm.lastName.$error"
-                         class="help-block has-error" role="alert"
-                         style="padding-left:20px;">
-                        <div ng-message="required">
-                            Last Name is required.
-                        </div>
+                     ng-show="vm.message">
+                    <div class="col-md-6">
+                        <pre style="font: inherit">{{vm.message}}</pre>
                     </div>
                 </div>
-                <div class="form-group"
-                     ng-class="{'has-error':vm.empForm.email.$invalid }">
-                    <label class="control-label"
-                           for="email">Email</label>
-                    <div>
-                        <input class="form-control"
-                               id="email"
-                               name="email"
-                               type="email"
-                               placeholder="Email"
-                               ng-model="vm.employee.email" />
-                        <div ng-messages="vm.empForm.email.$error"
-                             class="help-block has-error" role="alert">
-                            <span ng-message="email">Invalid format!</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group"
-                     ng-class="{'has-error':vm.empForm.position.$invalid }">
-                    <label class="control-label"
-                           for="position">Position</label>
-                    <div>
-                        <select class="form-control"
-                                id="position"
-                                name="position"
-                                type="text"
-                                placeholder="Positions"
-                                ng-options="option.name for option in vm.positions track by option.id"
-                                ng-change="vm.employee.positionId = vm.employee.position.id"
-                                ng-model="vm.employee.position"
-                                ng-required="true"></select>
-                    </div>
-                    <div ng-messages="vm.empForm.position.$error"
-                         class="help-block has-error" role="alert"
-                         style="padding-left:20px;">
-                        <div ng-message="required">
-                            Position is required.
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="form-group">
-                        <div class="text-center">
-                            <span>
-                                <button class="btn btn-primary"
-                                        style="width: 80px; margin-right: 10px"
-                                        ng-click="vm.submit()"
-                                        ng-disabled="vm.empForm.$invalid">
-                                    Save
-                                </button>
-                            </span>
-                            <span>
-                                <button class="btn btn-default"
-                                        style="width: 70px"
-                                        ng-click="vm.cancel()">
-                                    Cancel
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="form-group"
-                         ng-show="vm.message">
-                        <div class="col-md-6">
-                            <pre style="font: inherit">{{vm.message}}</pre>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
-        </form>
-    </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

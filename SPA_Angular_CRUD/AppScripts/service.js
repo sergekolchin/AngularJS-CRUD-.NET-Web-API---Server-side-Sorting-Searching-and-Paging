@@ -2,6 +2,10 @@
     'use strict';
 
     angular.module('myApp.services', ['ngResource'])
+        .factory('empData', function () {
+            var empData = [];
+            return empData;
+        })
         .factory('pagingParams', [function () {
             var pagingParams = {
                 currentPage: 1,

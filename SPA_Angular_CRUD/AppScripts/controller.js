@@ -2,12 +2,16 @@
 
 var app = angular.module('myApp.controllers', []);
 
-app.controller('employeeListCtrl', ['pagingParams', 'employeesResource', 'positionsResource', 'employeesGetParams',
-    function (pagingParams, employeesResource, positionsResource, employeesGetParams) {
+app.controller('employeeListCtrl', ['empData', 'pagingParams', 'employeesResource',
+    'positionsResource', 'employeesGetParams',
+    function (empData, pagingParams, employeesResource,
+        positionsResource, employeesGetParams) {
         var vm = this;
         vm.message = '';
-        // ref to "global" pagingParams in service
+        // ref to "global" pagingParams & empData in service
         vm.pagingParams = pagingParams;
+        vm.employees = empData;
+
         vm.pageSizeOptions = [5, 10, 20, 50];
         //selected employee
         vm.selected = {};
@@ -90,7 +94,7 @@ app.controller('employeeListCtrl', ['pagingParams', 'employeesResource', 'positi
         };
 
         vm.cancel = function () {
-            //find employee by unchangeable id
+            //find employee by id
             var index = vm.employees.map(function (e) { return e.id; }).indexOf(vm.selected.id);
             if (index !== -1) {
                 vm.employees[index] = vm.selected;
@@ -109,13 +113,14 @@ app.controller('employeeListCtrl', ['pagingParams', 'employeesResource', 'positi
             });
         };
 
-        loadPage();
+         loadPage();
     }]);
 
-app.controller('employeeAddCtrl', ['employee', 'positionsResource', '$state', '$uibModalInstance',
-    function (employee, positionsResource, $state, $uibModalInstance) {
+app.controller('employeeAddCtrl', ['empData', 'employee', 'positionsResource', '$uibModalInstance',
+    function (empData, employee, positionsResource, $uibModalInstance) {
         var vm = this;
         vm.employee = employee;
+        vm.employees = empData;
 
         //make copy for reset form by Cancel button
         vm.originalEmp = angular.copy(employee);
@@ -132,6 +137,7 @@ app.controller('employeeAddCtrl', ['employee', 'positionsResource', '$state', '$
                 function (data) {
                     vm.originalEmp = angular.copy(data);
                     vm.message = 'Save Complete';
+                    vm.employees.push(data);
                     $uibModalInstance.close();
                 },
                 //failure
