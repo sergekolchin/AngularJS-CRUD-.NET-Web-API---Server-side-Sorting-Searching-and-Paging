@@ -31,7 +31,9 @@ namespace SPA_Angular_CRUD
                         "~/Scripts/angular-ui-router.js",
                         "~/Scripts/angular-messages.js",
                         "~/Scripts/angular-ui/ui-bootstrap.js",
-                        "~/Scripts/angular-ui/ui-bootstrap-tpls.js"));
+                        "~/Scripts/angular-ui/ui-bootstrap-tpls.js",
+                        "~/Scripts/ng-file-upload-shim.js",
+                        "~/Scripts/ng-file-upload.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/appJs").Include(
                         "~/AppScripts/app.js",

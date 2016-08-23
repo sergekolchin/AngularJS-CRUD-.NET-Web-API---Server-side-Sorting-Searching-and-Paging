@@ -35,6 +35,9 @@
                     </a>
                 </th>
                 <th>
+                    Avatar
+                </th>
+                <th>
                     <a class="cursor" ng-click="vm.sort('firstName')">
                         First Name
                         <span ng-show="vm.pagingParams.sortBy == 'firstName'
@@ -74,8 +77,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="emp in vm.employees" ng-include="vm.getTemplate(emp)">
-            </tr>
+            <tr ng-repeat="emp in vm.employees" ng-include="vm.getTemplate(emp)"></tr>
         </tbody>
     </table>
     <div class="text-center">
@@ -101,18 +103,33 @@
     <hr />
 </div>
 <script type="text/ng-template" id="display">
-        <td>{{emp.id}}</td>
-        <td>{{emp.firstName}}</td>
-        <td>{{emp.lastName}}</td>
-        <td>{{emp.email}}</td>
-        <td>{{emp.position.name}}</td>
-        <td style="white-space:nowrap;">
-            <button type="button" class="btn btn-primary btn-sm" ng-click="vm.editEmployee(emp)">Edit</button>
-            <button type="button" class="btn btn-danger btn-sm" ng-click="vm.deleteEmployee(emp)">Delete</button>
-        </td>
+    <td>{{emp.id}}</td>
+    <td>
+        <img ng-src="{{ emp.avatar }}" alt="{{ emp.firstName }} {{ emp.lastName }}"
+             style="max-height:50px;max-width:50px;" />
+    </td>
+    <td>{{emp.firstName}}</td>
+    <td>{{emp.lastName}}</td>
+    <td>{{emp.email}}</td>
+    <td>{{emp.position.name}}</td>
+    <td style="white-space:nowrap;">
+        <button type="button" class="btn btn-primary btn-sm" ng-click="vm.editEmployee(emp)">Edit</button>
+        <button type="button" class="btn btn-danger btn-sm" ng-click="vm.deleteEmployee(emp)">Delete</button>
+    </td>
 </script>
 <script type="text/ng-template" id="edit">
     <td>{{emp.id}}</td>
+    <td>
+        <div class="row">
+            <img ng-src="{{ emp.avatar }}"
+                 alt="&nbsp;Upload me!&nbsp;" style="max-height:50px;max-width:50px;margin-bottom:5px;" />
+            <div class="btn btn-success btn-xs" ngf-select="vm.upload($file, emp)"
+                 ng-model="file" name="file" ngf-pattern="'image/*'"
+                 accept="image/*">
+                Upload
+            </div>
+        </div>
+    </td>
     <td ng-form name="firstNameForm" ng-class="{'has-error': !firstNameForm.firstName.$valid }">
         <input class="form-control"
                id="firstName"

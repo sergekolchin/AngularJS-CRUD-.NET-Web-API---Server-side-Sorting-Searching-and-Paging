@@ -3,9 +3,9 @@
 var app = angular.module('myApp.controllers', []);
 
 app.controller('employeeListCtrl', ['empData', 'pagingParams', 'employeesResource',
-    'positionsResource', 'employeesGetParams',
+    'positionsResource', 'employeesGetParams', 'Upload',
     function (empData, pagingParams, employeesResource,
-        positionsResource, employeesGetParams) {
+        positionsResource, employeesGetParams, Upload) {
         var vm = this;
         vm.message = '';
         // ref to "global" pagingParams & empData in service
@@ -80,7 +80,7 @@ app.controller('employeeListCtrl', ['empData', 'pagingParams', 'employeesResourc
                             },
                             function (response) { //failure
                                 vm.message = 'Error: ';
-                                vm.message = response.statusText + '\r\n';
+                                vm.message += response.statusText + '\r\n';
                                 if (response.data.modelState) {
                                     for (var key in response.data.modelState) {
                                         if (response.data.modelState.hasOwnProperty(key)) {
@@ -113,11 +113,35 @@ app.controller('employeeListCtrl', ['empData', 'pagingParams', 'employeesResourc
             });
         };
 
+        vm.upload = function (file, employee) {
+            if (file) {
+                Upload.upload({
+                    url: "api/upload",
+                    data: { file: file }
+                }).then(function (result) {
+                    //get first file name only
+                    employee.avatar = result.data[0];
+                }, function (response) {
+                    vm.errorUpload = "Upload failed: ";
+                    vm.errorUpload += response.statusText + '\r\n';
+                    if (response.data.modelState) {
+                        for (var key in response.data.modelState) {
+                            if (response.data.modelState.hasOwnProperty(key)) {
+                                vm.errorUpload += response.data.modelState[key] + "\r\n";
+                            }
+                        }
+                    }
+                    if (response.data.exceptionMessage)
+                        vm.errorUpload += response.data.exceptionMessage;
+                });
+            }
+        }
+
          loadPage();
     }]);
 
-app.controller('employeeAddCtrl', ['empData', 'employee', 'positionsResource', '$uibModalInstance',
-    function (empData, employee, positionsResource, $uibModalInstance) {
+app.controller('employeeAddCtrl', ['empData', 'employee', 'positionsResource', '$uibModalInstance', 'Upload',
+    function (empData, employee, positionsResource, $uibModalInstance, Upload) {
         var vm = this;
         vm.employee = employee;
         vm.employees = empData;
@@ -143,7 +167,7 @@ app.controller('employeeAddCtrl', ['empData', 'employee', 'positionsResource', '
                 //failure
                 function (response) {
                     vm.message = 'Error: ';
-                    vm.message = response.statusText + '\r\n';
+                    vm.message += response.statusText + '\r\n';
                     if (response.data.modelState) {
                         for (var key in response.data.modelState) {
                             if (response.data.modelState.hasOwnProperty(key)) {
@@ -159,4 +183,29 @@ app.controller('employeeAddCtrl', ['empData', 'employee', 'positionsResource', '
         vm.cancel = function () {
             $uibModalInstance.dismiss('cancel');
         }
+
+        vm.upload = function (file) {
+            if (file) {
+                Upload.upload({
+                    url: "api/upload",
+                    data: { file: file }
+                }).then(function (result) {
+                    //get first file name only
+                    vm.employee.avatar = result.data[0];
+                }, function (response) {
+                    vm.errorUpload = "Upload failed: ";
+                    vm.errorUpload += response.statusText + '\r\n';
+                    if (response.data.modelState) {
+                        for (var key in response.data.modelState) {
+                            if (response.data.modelState.hasOwnProperty(key)) {
+                                vm.errorUpload += response.data.modelState[key] + "\r\n";
+                            }
+                        }
+                    }
+                    if (response.data.exceptionMessage)
+                        vm.errorUpload += response.data.exceptionMessage;
+                });
+            }
+        }
     }]);
+

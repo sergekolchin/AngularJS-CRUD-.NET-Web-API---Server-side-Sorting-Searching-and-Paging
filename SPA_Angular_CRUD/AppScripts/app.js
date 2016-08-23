@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
     var app = angular.module('myApp', ['ui.router', 'ngMessages', 'ngRoute', 'ngAnimate',
-        'ui.bootstrap', 'ui.bootstrap.tpls',
+        'ui.bootstrap', 'ui.bootstrap.tpls', 'ngFileUpload',
         'myApp.services', 'myApp.controllers']);
 
     app.config(

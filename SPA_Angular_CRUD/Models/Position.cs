@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace SPA_Angular_CRUD.Models
 {
@@ -9,6 +10,7 @@ namespace SPA_Angular_CRUD.Models
 
         [Display(Name="Position")]
         [Required(ErrorMessage = "Position name is required")]
+        [JsonProperty("name")]
         public string Name { get; set; }
     }
 }

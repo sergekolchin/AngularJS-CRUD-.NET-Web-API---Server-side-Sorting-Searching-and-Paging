@@ -27,3 +27,7 @@ a.cursor:hover {
     cursor: pointer;
     text-decoration: none;
 }
+
+.table tbody > tr > td {
+    vertical-align: middle;
+}
