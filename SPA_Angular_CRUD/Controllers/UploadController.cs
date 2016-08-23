@@ -20,27 +20,25 @@ namespace SPA_Angular_CRUD.Controllers
             {
                 return BadRequest("Unsupported Media Type");
             }
-            const string avatarsFolder = "Content/Images/";
-            string targetFolder = HttpContext.Current.Server.MapPath("~/" + avatarsFolder);
+            const string filePrefix = "Content/Images/";
+            string targetFolder = HttpContext.Current.Server.MapPath("~/" + filePrefix);
             var provider = new MultipartFormDataStreamProvider(targetFolder);
             var fileNames = new List<string>();
 
             try
             {
                 await Request.Content.ReadAsMultipartAsync(provider);
-
                 foreach (MultipartFileData file in provider.FileData)
                 {
-                    Trace.WriteLine(file.Headers.ContentDisposition.FileName);
-                    Trace.WriteLine("Server file path: " + file.LocalFileName);
                     var fileName = file.Headers.ContentDisposition.FileName.Trim('\"');
                     if (File.Exists(Path.Combine(targetFolder, fileName)))
                     {
                         File.Delete(Path.Combine(targetFolder, fileName));
                     }
                     File.Move(file.LocalFileName, Path.Combine(targetFolder, fileName));
-                    fileNames.Add(avatarsFolder + fileName);
+                    fileNames.Add(filePrefix + fileName);
                 }
+                // return List of uploaded files
                 return Ok(fileNames);
             }
             catch (Exception ex)
